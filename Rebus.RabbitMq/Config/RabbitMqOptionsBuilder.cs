@@ -187,7 +187,7 @@ namespace Rebus.Config
             PublisherConfirms = value;
             return this;
         }
-
+        
         internal bool? DeclareExchanges { get; private set; }
         internal bool? DeclareInputQueue { get; private set; }
         internal bool? BindInputQueue { get; private set; }
@@ -256,7 +256,7 @@ namespace Rebus.Config
             {
                 transport.EnablePublisherConfirms(PublisherConfirms.Value);
             }
-
+            
             transport.SetInputQueueOptions(QueueOptions);
             transport.SetExchangeOptions(ExchangeOptions);
         }

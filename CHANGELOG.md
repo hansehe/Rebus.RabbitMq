@@ -63,7 +63,7 @@
 
 * Minor tweak to avoid potential dictionary trouble with double-adding - thanks [samartzidis]
 
-## 5.0.0-b07
+## 5.0.0-b09
 
 * Add callback to allow for customizing the `IConnectionFactory` instance used by the transport
 * Make assembly non-CLS compliant (necessary to be able to customize RabbitMQ's connection factory)
@@ -71,6 +71,7 @@
 * Change how models are managed to maximise reuse and improve performance
 * Don't log that silly `EndOfStreamException`, because that's apparently how the RabbitMQ driver rolls...
 * Add support for enabling publisher confirms - thanks [hansehe]
+* Complete support for publishing on alternate exchanges via the `@` syntax (topics like `<topic-name>@<exchange-name>`) - thanks [hansehe]
 
 ---
 

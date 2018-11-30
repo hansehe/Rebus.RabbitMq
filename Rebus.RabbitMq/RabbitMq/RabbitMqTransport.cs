@@ -130,7 +130,7 @@ namespace Rebus.RabbitMq
         {
             _bindInputQueue = value;
         }
-        
+
         /// <summary>
         /// Sets whether to use the publisher confirms protocol
         /// </summary>
@@ -182,7 +182,7 @@ namespace Rebus.RabbitMq
         {
             _inputQueueOptions = inputQueueOptions;
         }
-        
+
         /// <summary>
         /// Configures input exchange options
         /// </summary>
@@ -525,7 +525,12 @@ namespace Rebus.RabbitMq
                 {
                     EnsureQueueExists(routingKey, model);
                 }
-                
+
+                if (_publisherConfirmsEnabled)
+                {
+                    model.ConfirmSelect();
+                }
+
                 model.BasicPublish(
                     exchange: exchange,
                     routingKey: routingKey.RoutingKey,
@@ -533,7 +538,7 @@ namespace Rebus.RabbitMq
                     basicProperties: props,
                     body: message.Body
                 );
-                
+
                 if (_publisherConfirmsEnabled)
                 {
                     model.WaitForConfirmsOrDie();
@@ -696,11 +701,6 @@ namespace Rebus.RabbitMq
 
                 context.OnDisposed(() => _models.Enqueue(newModel));
 
-                if (_publisherConfirmsEnabled)
-                {
-                    newModel.ConfirmSelect();
-                }
-
                 // Configure registered events on model
                 _callbackOptions?.ConfigureEvents(newModel);
 
@@ -753,7 +753,9 @@ namespace Rebus.RabbitMq
         /// </summary>
         public async Task<string[]> GetSubscriberAddresses(string topic)
         {
-            return new[] { $"{topic}@{_topicExchangeName}" };
+            return topic.Contains('@')
+                ? new[] { topic }
+                : new[] { $"{topic}@{_topicExchangeName}" };
         }
 
         /// <summary>
